@@ -9,14 +9,15 @@ def sanitize_filename(filename):
     return re.sub(r'[^a-zA-Z0-9_.]', '_', filename)
 
 def find_all_video_files(location):
-    """ Find all video files in the given directory and sort them by size. """
+    """ Find all video files in the given directory without searching subdirectories. """
     video_files = []
-    for root, dirs, files in os.walk(location):
-        for file in files:
-            if file.lower().endswith(('.mp4', '.avi', '.mov', '.mkv')):
-                full_path = os.path.join(root, file)
-                video_files.append(full_path)
+    for file in os.listdir(location):
+        if file.lower().endswith(('.mp4', '.avi', '.mov', '.mkv')):
+            full_path = os.path.join(location, file)
+            video_files.append(full_path)
+            print(f"found: {full_path}")
     return sorted(video_files, key=lambda x: os.path.getsize(x))
+
 
 def process_all_videos(video_dir, temp_folder, frame_count, resolution, train_scale):
     """ Process all videos found in the specified directory. """
